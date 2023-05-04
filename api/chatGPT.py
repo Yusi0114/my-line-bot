@@ -1,31 +1,28 @@
-from api.prompt import Prompt
-
-import os
 import openai
+import os
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# 設定 OpenAI API 密鑰
+# openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = "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"
 
+# 輸入文本
+input_text = "今天天氣很好，請用中文回答。請做一首跟天氣有關的詩"
 
-class ChatGPT:
-    def __init__(self):
-        self.prompt = Prompt()
-        self.model = os.getenv("OPENAI_MODEL", default = "text-davinci-003")
-        self.temperature = float(os.getenv("OPENAI_TEMPERATURE", default = 0))
-        self.frequency_penalty = float(os.getenv("OPENAI_FREQUENCY_PENALTY", default = 0))
-        self.presence_penalty = float(os.getenv("OPENAI_PRESENCE_PENALTY", default = 0.6))
-        self.max_tokens = int(os.getenv("OPENAI_MAX_TOKENS", default = 240))
+# 設定 GPT-3.5 模型的檢索引擎
+model_engine = "text-davinci-003"
 
-    def get_response(self):
-        response = openai.Completion.create(
-            model=self.model,
-            prompt=self.prompt.generate_prompt(),
-            temperature=self.temperature,
-            frequency_penalty=self.frequency_penalty,
-            presence_penalty=self.presence_penalty,
-            max_tokens=self.max_tokens
-        )
-        return response['choices'][0]['text'].strip()
+# 設定生成的文本長度
+output_length = 300
 
-    def add_msg(self, text):
-        self.prompt.add_msg(text)
-    
+# 使用 GPT-3.5 模型生成文本
+response = openai.Completion.create(
+    engine=model_engine,
+    prompt=input_text,
+    max_tokens=output_length,
+)
+
+# 取得生成的文本
+output_text = response.choices[0].text.strip()
+
+# 印出生成的文本
+print(output_text)
